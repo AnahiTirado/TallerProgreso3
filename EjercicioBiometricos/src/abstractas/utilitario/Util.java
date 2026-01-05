@@ -170,7 +170,7 @@ public class Util {
         System.out.println("10. Mostrar - Total Métodos Facial por Empleado");
         System.out.println("11. Mostrar - Métodos Mayor a Umbral por Empleado");
         System.out.println("12. Autenticar - Empleado");
-        System.out.println("14. Salir");
+        System.out.println("13. Salir");
         System.out.print("Ingrese una opción: ");
     }
 
