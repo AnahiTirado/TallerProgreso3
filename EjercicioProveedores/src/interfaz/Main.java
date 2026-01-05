@@ -88,7 +88,7 @@ public class Main {
                     int duracionEnMeses;
                     System.out.println("===CONTRATO PROVEEDOR-CLIENTE===");
                     System.out.println(u.listarClientesEmpresa());
-                    System.out.print("Ingrese el numero de Proveedor para crear su contrato: ");
+                    System.out.print("Ingrese el numero de cliente empresarial para crear su contrato: ");
                     idCl = Integer.parseInt(sc.nextLine());
 
                     ClienteEmpresa cl = u.getIDClienteEmpresa(idCl);
