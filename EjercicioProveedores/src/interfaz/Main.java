@@ -30,173 +30,168 @@ public class Main {
                 opc = -1;
             }
 
-            switch (opc){
+            switch (opc) {
+
                 case 1: {
-                    System.out.println("\n===CREAR PROVEEDOR===");
-                    System.out.println("Tipos de proveedores:");
-                    System.out.println("1. Cloud");
-                    System.out.println("2. SaaS");
-                    System.out.println("3. Pasarela Pago");
-                    System.out.print("Seleccione el tipo a crear (1-3): ");
-
-                    int tipoP;
-                    String tipoPEntrada = sc.nextLine();
                     try {
-                        tipoP = Integer.parseInt(tipoPEntrada);
+                        System.out.println("\n===CREAR PROVEEDOR===");
+                        System.out.println("1. Cloud");
+                        System.out.println("2. SaaS");
+                        System.out.println("3. Pasarela Pago");
+                        System.out.print("Seleccione el tipo: ");
+
+                        int tipoP = Integer.parseInt(sc.nextLine());
+
+                        if (tipoP < 1 || tipoP > 3) {
+                            System.out.println("Tipo inválido.");
+                            break;
+                        }
+
+                        System.out.print("Ingrese nombre: ");
+                        String nombre = sc.nextLine();
+
+                        System.out.print("Ingrese país: ");
+                        String pais = sc.nextLine();
+
+                        u.crearProveedor(tipoP, nombre, pais);
+                        System.out.println("Proveedor creado correctamente.");
+
                     } catch (NumberFormatException e) {
-                        tipoP = -1;
+                        System.out.println("Error: debe ingresar un número válido.");
                     }
-                    if (tipoP < 1 || tipoP > 3) {
-                        System.out.println("Tipo invalido. No se creo el proveedor.");
-                        break;
-                    }
-
-                    System.out.print("Ingrese el nombre del proveedor: ");
-                    String nombre = sc.nextLine();
-
-                    System.out.print("Ingrese el pais del proveedor: ");
-                    String pais = sc.nextLine();
-                    u.crearProveedor(tipoP, nombre, pais);
-
                 } break;
+
                 case 2: {
-                    System.out.println("===CREAR CLIENTE EMPRESARIAL===");
-                    System.out.println("Ingrese el nombre de la empresa que desee agregar: ");
-                    String nombre = sc.nextLine();
-                    u.agregarClienteEmpresa(nombre);
+                    try {
+                        System.out.println("===CREAR CLIENTE EMPRESARIAL===");
+                        System.out.print("Nombre de la empresa: ");
+                        String nombre = sc.nextLine();
 
+                        u.agregarClienteEmpresa(nombre);
+                        System.out.println("Cliente creado correctamente.");
+
+                    } catch (Exception e) {
+                        System.out.println("Error al crear el cliente.");
+                    }
                 } break;
+
                 case 3: {
-                    int idCl, idPr;
-                    System.out.println("===ASOCIAR PROOVEDOR A UN CLIENTE===");
-                    System.out.println(u.listarClientesEmpresa());
-                    System.out.print("Ingrese el numero de Cliente: ");
-                    idCl = Integer.parseInt(sc.nextLine());
+                    try {
+                        System.out.println("===ASOCIAR PROVEEDOR A CLIENTE===");
+                        System.out.println(u.listarClientesEmpresa());
+                        System.out.print("ID Cliente: ");
+                        int idCl = Integer.parseInt(sc.nextLine());
 
-                    System.out.println(u.listarProveedores());
-                    System.out.print("Ingrese el numero de Proveedor a contratar: ");
-                    idPr = Integer.parseInt(sc.nextLine());
+                        System.out.println(u.listarProveedores());
+                        System.out.print("ID Proveedor: ");
+                        int idPr = Integer.parseInt(sc.nextLine());
 
-                    ClienteEmpresa c = u.getIDClienteEmpresa(idCl);
-                    Proveedor p = u.getIDProveedor(idPr);
-                    c.contratarProveedor(p);
+                        ClienteEmpresa c = u.getIDClienteEmpresa(idCl);
+                        Proveedor p = u.getIDProveedor(idPr);
 
+                        c.contratarProveedor(p);
+                        System.out.println("Proveedor asociado correctamente.");
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Debe ingresar números válidos.");
+                    } catch (NullPointerException e) {
+                        System.out.println("Cliente o proveedor no encontrado.");
+                    }
                 } break;
+
                 case 4: {
-                    int idCl;
-                    double precio;
-                    int duracionEnMeses;
-                    System.out.println("===CONTRATO PROVEEDOR-CLIENTE===");
-                    System.out.println(u.listarClientesEmpresa());
-                    System.out.print("Ingrese el numero de cliente empresarial para crear su contrato: ");
-                    idCl = Integer.parseInt(sc.nextLine());
-
-                    ClienteEmpresa cl = u.getIDClienteEmpresa(idCl);
-                    List<Proveedor> provCl = cl.getPrContratados();
-                    if (provCl.isEmpty()) {
-                        System.out.println("Este cliente no tiene proveedores asociados.");
-                        System.out.println("Use la opcion 3 para asociar un proveedor al cliente.");
-                        break;
-                    }
-
-                    int i = 1;
-                    StringBuilder sb = new StringBuilder();
-                    for (Proveedor p: provCl){
-                        sb.append(i).append(". ").append(p).append("\n");
-                        i++;
-                    }
-                    System.out.println(sb);
-
-                    System.out.println("Ingrese el indice del proveedor asociado para crear su contrato: ");
-                    int idAsociadoContrato = Integer.parseInt(sc.nextLine());
-
-                    Proveedor pr = provCl.get(idAsociadoContrato - 1);
-
-                    System.out.print("Ingrese el costo del contrato: ");
-                    String precioEntrada = sc.nextLine();
                     try {
-                        precio = Double.parseDouble(precioEntrada);
-                    } catch (NumberFormatException e) {
-                        precio = -1;
-                    }
+                        System.out.println("===CREAR CONTRATO===");
+                        System.out.println(u.listarClientesEmpresa());
+                        System.out.print("ID Cliente: ");
+                        int idCl = Integer.parseInt(sc.nextLine());
 
-                    System.out.print("Ingrese el tiempo de duracion del contrato en meses: ");
-                    String duracionEntrada = sc.nextLine();
-                    try {
-                        duracionEnMeses = Integer.parseInt(duracionEntrada);
-                    } catch (NumberFormatException e) {
-                        duracionEnMeses = -1;
-                    }
-                    System.out.println("Contrato creado con exito");
-                    System.out.println(pr.agregarContrato(precio, duracionEnMeses));
+                        ClienteEmpresa cl = u.getIDClienteEmpresa(idCl);
 
+                        if (cl.getPrContratados().isEmpty()) {
+                            System.out.println("El cliente no tiene proveedores.");
+                            break;
+                        }
+
+                        int i = 1;
+                        for (Proveedor p : cl.getPrContratados()) {
+                            System.out.println(i++ + ". " + p);
+                        }
+
+                        System.out.print("Seleccione proveedor: ");
+                        int idx = Integer.parseInt(sc.nextLine()) - 1;
+
+                        Proveedor pr = cl.getPrContratados().get(idx);
+
+                        System.out.print("Precio: ");
+                        double precio = Double.parseDouble(sc.nextLine());
+
+                        System.out.print("Duración (meses): ");
+                        int duracion = Integer.parseInt(sc.nextLine());
+
+                        System.out.println(pr.agregarContrato(precio, duracion));
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Formato numérico inválido.");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Proveedor seleccionado no existe.");
+                    }
                 } break;
+
                 case 5: {
-                    System.out.println("===VERIFICAR PROVEEDORES EN UN CLIENTE===");
-                    System.out.println(u.listarClientesEmpresa());
-                    System.out.print("Ingrese el numero del cliente a verificar: ");
-                    int idCl = Integer.parseInt(sc.nextLine());
+                    try {
+                        System.out.println("===VERIFICAR TIPO DE PROVEEDOR===");
+                        System.out.println(u.listarClientesEmpresa());
+                        System.out.print("ID Cliente: ");
+                        int idCl = Integer.parseInt(sc.nextLine());
 
-                    ClienteEmpresa c = u.getIDClienteEmpresa(idCl);
-                    if (c == null) break;
+                        ClienteEmpresa c = u.getIDClienteEmpresa(idCl);
 
-                    if (c.getPrContratados().isEmpty()) {
-                        System.out.println("Este cliente no tiene proveedores asociados.");
-                        break;
-                    }
+                        System.out.println("1. Cloud\n2. SaaS\n3. Pasarela de pago");
+                        int opTipo = Integer.parseInt(sc.nextLine());
 
-                    System.out.println("Tipos reales del cliente:");
-                    for (Proveedor prov : c.getPrContratados()) {
-                        System.out.println(prov.getNombre() + " | Tipo:" + prov.tipoProveedor());
-                    }
+                        String tipo = switch (opTipo) {
+                            case 1 -> "Cloud";
+                            case 2 -> "SaaS";
+                            case 3 -> "Pasarelas de pago";
+                            default -> null;
+                        };
 
-                    System.out.println("Tipo a verificar:");
-                    System.out.println("1. Cloud");
-                    System.out.println("2. SaaS");
-                    System.out.println("3. Pasarelas de pago");
-                    System.out.print("Ingrese una opción: ");
-                    int opTipo = Integer.parseInt(sc.nextLine());
-
-                    String tipo;
-
-                    switch (opTipo) {
-                        case 1:
-                            tipo = "Cloud";
+                        if (tipo == null) {
+                            System.out.println("Tipo inválido.");
                             break;
-                        case 2:
-                            tipo = "SaaS";
-                            break;
-                        case 3:
-                            tipo = "Pasarelas de pago";
-                            break;
-                        default:
-                            tipo = null;
-                            break;
+                        }
+
+                        System.out.println(
+                                c.verificarTipoProveedor(tipo)
+                                        ? "SI posee proveedores de tipo " + tipo
+                                        : "NO posee proveedores de tipo " + tipo
+                        );
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Debe ingresar números válidos.");
+                    } catch (NullPointerException e) {
+                        System.out.println("Cliente no encontrado.");
                     }
-
-                    if (tipo == null) {
-                        System.out.println("Opción inválida.");
-                        break;
-                    }
-
-                    boolean tiene = c.verificarTipoProveedor(tipo);
-
-                    System.out.println(tiene
-                            ? "El cliente SI posee proveedores de tipo " + tipo
-                            : "El cliente NO posee proveedores de tipo " + tipo);
-
                 } break;
+
                 case 6: {
-                    System.out.println("===CONTRATOS ACTIVOS DEL SISTEMA===");
-                    System.out.println(u.listarContratosActivos());
+                    try {
+                        System.out.println("===CONTRATOS ACTIVOS===");
+                        System.out.println(u.listarContratosActivos());
+                    } catch (Exception e) {
+                        System.out.println("Error al listar contratos.");
+                    }
                 } break;
-                case 7: {
+
+                case 7:
                     System.out.println("Saliendo del programa...");
-                } break;
-                default:{
-                    System.out.println("Opcion invalida, intentelo nuevamente");
-                }
+                    break;
+
+                default:
+                    System.out.println("Opción inválida.");
             }
+
         }while(opc != 7);
     }
 }
