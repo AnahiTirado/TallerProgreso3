@@ -12,7 +12,7 @@ import java.util.List;
 public class Util {
     private List<Empleado> empleados;
 
-    public Util(){ //Sin parametros, inicializa la lista
+    public Util() {
         empleados = new ArrayList<>();
     }
 
@@ -20,143 +20,123 @@ public class Util {
         return empleados;
     }
 
-    public void agregarEmpleados (String cedula, String nombre){
+    public void agregarEmpleados(String cedula, String nombre) {
         int indice = buscarEmpleado(cedula);
-        if (indice == -1){
+        if (indice == -1) {
             empleados.add(new Empleado(cedula, nombre));
-            System.out.println("Empleado Agregado!");
         } else {
-            System.out.println("Empleado ya existe");
+            throw new IllegalStateException("Empleado ya existe con cédula: " + cedula);
         }
-
     }
 
-    public int buscarEmpleado (String cedula){
-        for (int i = 0; i < empleados.size(); i++){
-            if(empleados.get(i).getCedula().equals(cedula)){
+    public int buscarEmpleado(String cedula) {
+        for (int i = 0; i < empleados.size(); i++) {
+            if (empleados.get(i).getCedula().equals(cedula)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void agregarMetodoAuthHuella(String cedula, int nivelSeguridad, String patronHuella){
+    public void agregarMetodoAuthHuella(String cedula, int nivelSeguridad, String patronHuella) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            empleados.get(indice).adicionarAuth(new HuellaDigital(nivelSeguridad, patronHuella));
-        } else {
-            System.out.println("Empleado NO Existe");
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        empleados.get(indice).adicionarAuth(new HuellaDigital(nivelSeguridad, patronHuella));
     }
 
-    public void agregarMetodoAuthFacial(String cedula, int nivelSeguridad, String patronRostro){
+    public void agregarMetodoAuthFacial(String cedula, int nivelSeguridad, String patronRostro) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            if (empleados.get(indice).cantidadRegistroRostro() == 0){
-                empleados.get(indice).adicionarAuth(new ReconocimientoFacial(nivelSeguridad, patronRostro));
-            } else {
-                System.out.println("Solo un ingreso permitido");
-            }
-        } else {
-            System.out.println("Empleado NO Existe");
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+
+        if (empleados.get(indice).cantidadRegistroRostro() > 0) {
+            throw new IllegalStateException("Solo se permite un registro facial por empleado");
+        }
+
+        empleados.get(indice).adicionarAuth(new ReconocimientoFacial(nivelSeguridad, patronRostro));
     }
 
-    public void agregarMetodoAuthToken(String cedula, int nivelSeguridad, String token){
+    public void agregarMetodoAuthToken(String cedula, int nivelSeguridad, String token) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            empleados.get(indice).adicionarAuth(new TokenSeguridad(nivelSeguridad, token));
-        } else {
-            System.out.println("Empleado NO Existe");
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        empleados.get(indice).adicionarAuth(new TokenSeguridad(nivelSeguridad, token));
     }
 
-    public int cantidadAuthHuella (String cedula){
+    public int cantidadAuthHuella(String cedula) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            return empleados.get(indice).cantidadRegistroHuella();
-        } else {
-            System.out.println("Empleado NO Existe");
-            return -1;
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        return empleados.get(indice).cantidadRegistroHuella();
     }
 
-    public int cantidadAuthRostro (String cedula){
+    public int cantidadAuthRostro(String cedula) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            return empleados.get(indice).cantidadRegistroRostro();
-        } else {
-            System.out.println("Empleado NO Existe");
-            return -1;
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        return empleados.get(indice).cantidadRegistroRostro();
     }
 
-    public int cantidadAuthToken (String cedula){
+    public int cantidadAuthToken(String cedula) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            return empleados.get(indice).cantidadRegistroToken();
-        } else {
-            System.out.println("Empleado NO Existe");
-            return -1;
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        return empleados.get(indice).cantidadRegistroToken();
     }
 
-    public String authMayorSeguridad (String cedula, int nivelSeguridad){
+    public String authMayorSeguridad(String cedula, int nivelSeguridad) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1){
-            return empleados.get(indice).seguridadMayorUmbral(nivelSeguridad);
-        } else {
-            System.out.println("Empleado NO Existe");
-            return null;
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        return empleados.get(indice).seguridadMayorUmbral(nivelSeguridad);
     }
-
-    //Metodos para Autenticar, dos maneras posibles
 
     public boolean autenticar(String dato, String tipo, String cedula) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1) {
-            return empleados.get(indice).autenticar(dato, tipo);
-        } else {
-            System.out.println("Empleado NO Existe");
-            return false;
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+        return empleados.get(indice).autenticar(dato, tipo);
     }
 
-    public String autenticarStr(String tipo, String dato, String cedula){
+    public String autenticarStr(String tipo, String dato, String cedula) {
         int indice = buscarEmpleado(cedula);
-        if (indice != -1) {
-            boolean b = empleados.get(indice).autenticar(dato, tipo);
-            if (b){
-                return ("Autenticacion Permitida");
-            } else {
-                return ("Autenticacion Denegada");
-            }
-        } else {
-            return "Empleado NO Existe";
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
+
+        return empleados.get(indice).autenticar(dato, tipo)
+                ? "Autenticación Permitida"
+                : "Autenticación Denegada";
     }
+
     public String cantidadAuthTotal(String cedula) {
-        StringBuilder sb = new StringBuilder();
-
-        for (Empleado e : empleados) {
-            if (e.getCedula().equals(cedula)) {
-
-                if (e.getAutenticaciones().isEmpty()) {
-                    return "Empleado encontrado - Sin metodos de autenticacion registrados";
-                } else {
-                    for (MetodoAutenticacion m : e.getAutenticaciones()) {
-                        sb.append(m).append("\n");
-                    }
-                    return sb.toString();
-                }
-            }
+        int indice = buscarEmpleado(cedula);
+        if (indice == -1) {
+            throw new IllegalArgumentException("Empleado NO existe: " + cedula);
         }
-        return "Empleado NO existe: " + cedula;
+
+        Empleado e = empleados.get(indice);
+        if (e.getAutenticaciones().isEmpty()) {
+            return "Empleado encontrado - Sin métodos de autenticación registrados";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (MetodoAutenticacion m : e.getAutenticaciones()) {
+            sb.append(m).append("\n");
+        }
+        return sb.toString();
     }
 
-
-    public void menu(){
+    public void menu() {
         System.out.println("\n==== MENU ====");
         System.out.println("1. Agregar - Empleado");
         System.out.println("2. Agregar - Token de Seguridad");
@@ -173,6 +153,4 @@ public class Util {
         System.out.println("13. Salir");
         System.out.print("Ingrese una opción: ");
     }
-
-
 }
