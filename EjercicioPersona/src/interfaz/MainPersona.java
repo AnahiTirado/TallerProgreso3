@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class MainPersona {
     public static void main(String[] args) {
@@ -147,34 +144,73 @@ public class MainPersona {
     }
 
     public static void mostrarAlumnosPregrado(List<Persona> perso) {
+        if (perso == null || perso.isEmpty()) {
+            throw new IllegalArgumentException("La lista de personas está vacía o es nula");
+        }
+
         System.out.println("---ALUMNOS DE PREGRADO---");
+        boolean encontrado = false;
+
         for (Persona p : perso) {
             if (p instanceof AlumnoPregrado) {
                 System.out.println(p);
+                encontrado = true;
             }
+        }
+
+        if (!encontrado) {
+            throw new IllegalStateException("No existen alumnos de pregrado registrados");
         }
     }
 
     public static void mostrarAlumnosMagister(List<Persona> perso) {
+        if (perso == null || perso.isEmpty()) {
+            throw new IllegalArgumentException("La lista de personas está vacía o es nula");
+        }
+
         System.out.println("---ALUMNOS DE MAESTRIA---");
+        boolean encontrado = false;
+
         for (Persona p : perso) {
             if (p instanceof AlumnoMagister) {
                 System.out.println(p);
+                encontrado = true;
             }
+        }
+
+        if (!encontrado) {
+            throw new IllegalStateException("No existen alumnos de maestría registrados");
         }
     }
 
     public static void mostrarProfesores(List<Persona> perso) {
+        if (perso == null || perso.isEmpty()) {
+            throw new IllegalArgumentException("La lista de personas está vacía o es nula");
+        }
+
         System.out.println("---PROFESORES---");
+        boolean encontrado = false;
+
         for (Persona p : perso) {
             if (p instanceof ProfesorHora) {
                 System.out.println(p);
+                encontrado = true;
             }
+        }
+
+        if (!encontrado) {
+            throw new IllegalStateException("No existen profesores registrados");
         }
     }
 
     public static void mostrarProfesoresCHS(List<Persona> perso) {
+        if (perso == null || perso.isEmpty()) {
+            throw new IllegalArgumentException("La lista de personas está vacía o es nula");
+        }
+
         System.out.println("====PROFESORES====");
+        boolean encontrado = false;
+
         for (Persona p : perso) {
             if (p instanceof ProfesorHora) {
                 ProfesorHora ph = (ProfesorHora) p;
@@ -184,7 +220,12 @@ public class MainPersona {
                                 "\nHoras: " + ph.getHoras() +
                                 "\nSueldo: " + ph.getHoras() * 40
                 );
+                encontrado = true;
             }
+        }
+
+        if (!encontrado) {
+            throw new IllegalStateException("No existen profesores por hora registrados");
         }
     }
 }
